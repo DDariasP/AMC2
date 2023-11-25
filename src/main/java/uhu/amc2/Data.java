@@ -1,9 +1,8 @@
 package uhu.amc2;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -12,108 +11,121 @@ import java.util.Scanner;
  */
 public class Data {
 
-    public static Punto[] crearTSP(int talla, boolean peor) {
+    public static IProceso parsearSM(String filename) {
         try {
-            //crear el nuevo .tsp
-            String outputName = "dataset" + String.valueOf(talla) + ".tsp";
-            File output = new File(outputName);
-            Menu.fileName = outputName;
-            if (output.exists()) {
-                output.delete();
-            }
-            output.createNewFile();
-            //rellenar el nuevo .tsp
-            FileWriter writer = new FileWriter(outputName);
-            writer.write("DIMENSION: " + String.valueOf(talla) + "\n");
-            writer.write("NODE_COORD_SECTION\n");
-            Punto p[] = new Punto[talla];
-            Punto.rellenar(p, talla, peor); //crear el array correspondiente
-            DecimalFormat numberFormat = new DecimalFormat("#.0000000000");
-            for (int i = 0; i < talla; i++) {
-                String x = numberFormat.format(p[i].x);
-                String y = numberFormat.format(p[i].y);
-                writer.write(p[i].id + " " + x + " " + y + "\n");
-            }
-            writer.write("EOF");
-            writer.close();
-            //devolver el array creado
-            return p;
-        } catch (IOException ex) {
-            return null;
-        }
-    }
-
-    public static Punto[] parsearTSP(File file) {
-        try {
-            //averiguar la dimension
-            Scanner scanner = new Scanner(file);
+            //crear el scanner
+            Scanner scanner = new Scanner(new File(filename));
             String line = "";
-            boolean found = false;
             String[] tokens;
-            int talla = 0;
-            while (!found) {
+            //averiguar el tipo
+            int tipo = -1;
+            line = scanner.nextLine();
+            tokens = line.split("\\s+");
+            if ("TIPO:".equals(tokens[0])) {
+                String tsm = tokens[1];
+                switch (tsm) {
+                    case "AFD":
+                        tipo = 0;
+                        break;
+                    case "AFND":
+                        tipo = 1;
+                        break;
+                }
+            }
+            //leer los estados
+            ArrayList<Estado> listaE = new ArrayList<>();
+            line = scanner.nextLine();
+            tokens = line.split("\\s+");
+            if ("ESTADOS:".equals(tokens[0])) {
+                for (int i = 1; i < tokens.length; i++) {
+                    listaE.add(new Estado(tokens[i]));
+                }
+            }
+            //marcar inicial
+            Estado ini = null;
+            line = scanner.nextLine();
+            tokens = line.split("\\s+");
+            if ("INICIAL:".equals(tokens[0])) {
+                int pos = Estado.pertenece(tokens[1], listaE);
+                listaE.get(pos).esInicial = true;
+                ini = listaE.get(pos);
+            }
+            //marcar finales
+            line = scanner.nextLine();
+            tokens = line.split("\\s+");
+            if ("FINALES:".equals(tokens[0])) {
+                for (int i = 1; i < tokens.length; i++) {
+                    int pos = Estado.pertenece(tokens[i], listaE);
+                    listaE.get(pos).esFinal = true;
+                }
+            }
+            //crear las transiciones
+            //AFD
+            ArrayList<Transicion> listaT = new ArrayList<>();
+            if (tipo == 0) {
                 line = scanner.nextLine();
-                if (line.trim().length() > 0) {
+                tokens = line.split("\\s+");
+                if ("TRANSICIONES:".equals(tokens[0])) {
+                    line = scanner.nextLine();
                     tokens = line.split("\\s+");
-                    if ("DIMENSION:".equals(tokens[0]) || "DIMENSION".equals(tokens[0])) {
-                        found = true;
-                        talla = Integer.parseInt(tokens[tokens.length - 1]);
+                    while (!tokens[0].equals("FIN")) {
+                        Estado origen = listaE.get(Estado.pertenece(tokens[0], listaE));
+                        String simbolo = tokens[1].substring(1, tokens[1].length() - 1);
+                        Estado destino = listaE.get(Estado.pertenece(tokens[2], listaE));
+                        listaT.add(new Transicion(origen, simbolo, destino));
+                        line = scanner.nextLine();
+                        tokens = line.split("\\s+");
                     }
                 }
             }
-            //crear el array correspondiente
-            Punto p[] = new Punto[talla];
-            int i = 0;
-            found = false;
-            while (!found) { //encontrar inicio
+            //AFND
+            ArrayList<Transicion> listaL = new ArrayList<>();
+            if (tipo == 1) {
                 line = scanner.nextLine();
-                if (line.trim().length() > 0) {
+                tokens = line.split("\\s+");
+                if ("TRANSICIONES:".equals(tokens[0])) {
+                    line = scanner.nextLine();
                     tokens = line.split("\\s+");
-                    if ("NODE_COORD_SECTION".equals(tokens[0]) || "NODE".equals(tokens[0])) {
-                        found = true;
+                    while (!tokens[1].equals("LAMBDA:")) {
+                        for (int i = 2; i < tokens.length; i++) {
+                            Estado origen = listaE.get(Estado.pertenece(tokens[0], listaE));
+                            String simbolo = tokens[1].substring(1, tokens[1].length() - 1);
+                            Estado destino = listaE.get(Estado.pertenece(tokens[i], listaE));
+                            listaT.add(new Transicion(origen, simbolo, destino));
+                        }
+                        line = scanner.nextLine();
+                        tokens = line.split("\\s+");
                     }
                 }
-            }
-            while (scanner.hasNextLine()) { //guardar puntos
+                //lambda
                 line = scanner.nextLine();
-                if (!line.equals("EOF") && line.length() > 0) {
+                tokens = line.split("\\s+");
+                while (!tokens[0].equals("FIN")) {
+                    for (int i = 1; i < tokens.length; i++) {
+                        Estado origen = listaE.get(Estado.pertenece(tokens[0], listaE));
+                        Estado destino = listaE.get(Estado.pertenece(tokens[i], listaE));
+                        listaL.add(new Transicion(origen, "lambda", destino));
+                    }
+                    line = scanner.nextLine();
                     tokens = line.split("\\s+");
-                    int id = Integer.parseInt(tokens[0]);
-                    double x = Double.parseDouble(tokens[1]);
-                    double y = Double.parseDouble(tokens[2]);
-                    p[i] = new Punto(id, x, y);
-                    i++;
                 }
             }
+            //crear el automata correspondiente
+            IProceso sm = null;
+            switch (tipo) {
+                case 0:
+                    sm = new AFD(ini, listaE, listaT);
+                    break;
+                case 1:
+                    sm = new AFND(ini, listaE, listaT, listaL);
+                    break;
+            }
+            //cerrar el scanner
             scanner.close();
-            //devolver el array creado
-            return p;
+            //devolver el automata creado
+            return sm;
         } catch (IOException ex) {
             return null;
-        }
-    }
-
-    public static void guardarBusqueda(Punto[] p, String tipo) {
-        try {
-            //crear el nuevo .tsp
-            String outputName = tipo + String.valueOf(p.length) + ".tsp";
-            File output = new File(outputName);
-            if (output.exists()) {
-                output.delete();
-            }
-            output.createNewFile();
-            //rellenar el nuevo .tsp
-            FileWriter writer = new FileWriter(outputName);
-            writer.write("DIMENSION: " + String.valueOf(p.length) + "\n");
-            writer.write("NODE_COORD_SECTION\n");
-            DecimalFormat numberFormat = new DecimalFormat("#.0000000000");
-            for (int i = 0; i < p.length; i++) {
-                String x = numberFormat.format(p[i].x);
-                String y = numberFormat.format(p[i].y);
-                writer.write(p[i].id + " " + x + " " + y + "\n");
-            }
-            writer.close();
-        } catch (IOException ex) {
         }
     }
 

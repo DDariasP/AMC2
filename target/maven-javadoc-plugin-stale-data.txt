@@ -1,0 +1,58 @@
+@options
+@packages
+-classpath
+'/home/diego/.m2/repository/net/sf/jung/jung-algorithms/2.1.1/jung-algorithms-2.1.1.jar:/home/diego/.m2/repository/net/sf/jung/jung-api/2.1.1/jung-api-2.1.1.jar:/home/diego/.m2/repository/com/google/guava/guava/19.0/guava-19.0.jar:/home/diego/.m2/repository/net/sf/jung/jung-graph-impl/2.1.1/jung-graph-impl-2.1.1.jar:/home/diego/.m2/repository/net/sf/jung/jung-io/2.1.1/jung-io-2.1.1.jar:/home/diego/.m2/repository/net/sf/jung/jung-samples/2.1.1/jung-samples-2.1.1.jar:/home/diego/.m2/repository/net/sf/jung/jung-visualization/2.1.1/jung-visualization-2.1.1.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'11'
+-sourcepath
+'/home/diego/NetBeansProjects/AMC2/src/main/java:/home/diego/NetBeansProjects/AMC2/target/generated-sources/annotations'
+-author
+-bottom
+'Copyright &#169; 2023. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/home/diego/NetBeansProjects/AMC2/target/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'AMC2 0.1 API'
+-linkoffline
+'https://docs.oracle.com/en/java/javase/11/docs/api' '/home/diego/NetBeansProjects/AMC2/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'AMC2 0.1 API'
+uhu.amc2
+/home/diego/.m2/repository/net/sf/jung/jung-algorithms/2.1.1/jung-algorithms-2.1.1.jar = 1698449310887
+/home/diego/.m2/repository/net/sf/jung/jung-api/2.1.1/jung-api-2.1.1.jar = 1698449310787
+/home/diego/.m2/repository/com/google/guava/guava/19.0/guava-19.0.jar = 1698449311003
+/home/diego/.m2/repository/net/sf/jung/jung-graph-impl/2.1.1/jung-graph-impl-2.1.1.jar = 1698449310859
+/home/diego/.m2/repository/net/sf/jung/jung-io/2.1.1/jung-io-2.1.1.jar = 1698449310811
+/home/diego/.m2/repository/net/sf/jung/jung-samples/2.1.1/jung-samples-2.1.1.jar = 1698449310875
+/home/diego/.m2/repository/net/sf/jung/jung-visualization/2.1.1/jung-visualization-2.1.1.jar = 1698449310899
+/home/diego/NetBeansProjects/AMC2/src/main/java = 1700766074494
+/home/diego/NetBeansProjects/AMC2/target/generated-sources/annotations = 1700936257605
+/home/diego/NetBeansProjects/AMC2/target/apidocs/allpackages-index.html = 1700936261901
+/home/diego/NetBeansProjects/AMC2/target/apidocs/constant-values.html = 1700936261845
+/home/diego/NetBeansProjects/AMC2/target/apidocs/package-search-index.js = 1700936261893
+/home/diego/NetBeansProjects/AMC2/target/apidocs/help-doc.html = 1700936261913
+/home/diego/NetBeansProjects/AMC2/target/apidocs/deprecated-list.html = 1700936261905
+/home/diego/NetBeansProjects/AMC2/target/apidocs/stylesheet.css = 1700936261913
+/home/diego/NetBeansProjects/AMC2/target/apidocs/index.html = 1700936261909
+/home/diego/NetBeansProjects/AMC2/target/apidocs/type-search-index.zip = 1700936261893
+/home/diego/NetBeansProjects/AMC2/target/apidocs/search.js = 1700936261917
+/home/diego/NetBeansProjects/AMC2/target/apidocs/package-search-index.zip = 1700936261893
+/home/diego/NetBeansProjects/AMC2/target/apidocs/type-search-index.js = 1700936261893
+/home/diego/NetBeansProjects/AMC2/target/apidocs/index-all.html = 1700936261897
+/home/diego/NetBeansProjects/AMC2/target/apidocs/member-search-index.js = 1700936261893
+/home/diego/NetBeansProjects/AMC2/target/apidocs/overview-tree.html = 1700936261877
+/home/diego/NetBeansProjects/AMC2/target/apidocs/allclasses-index.html = 1700936261901
+/home/diego/NetBeansProjects/AMC2/target/apidocs/allclasses.html = 1700936261909
+/home/diego/NetBeansProjects/AMC2/target/apidocs/script.js = 1700936261917
+/home/diego/NetBeansProjects/AMC2/target/apidocs/element-list = 1700936261829
+/home/diego/NetBeansProjects/AMC2/target/apidocs/member-search-index.zip = 1700936261893
+/home/diego/NetBeansProjects/AMC2/target/apidocs/jquery-ui.overrides.css = 1700936261921
