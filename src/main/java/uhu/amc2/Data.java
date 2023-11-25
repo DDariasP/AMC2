@@ -11,10 +11,10 @@ import java.util.Scanner;
  */
 public class Data {
 
-    public static IProceso parsearSM(String filename) {
+    public static IProceso parsearSM(File filename) {
         try {
             //crear el scanner
-            Scanner scanner = new Scanner(new File(filename));
+            Scanner scanner = new Scanner(filename);
             String line = "";
             String[] tokens;
             //averiguar el tipo
