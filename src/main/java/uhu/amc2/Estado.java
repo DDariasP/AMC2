@@ -35,17 +35,18 @@ public class Estado {
 
     @Override
     public boolean equals(Object o) {
-
         //Si el objeto se compara consigo mismo, devuelve true  
         if (o == this) {
             return true;
         }
-
-        //Hacer typecast del objeto a Estado para compararlo 
+        //Hacer typecast del objeto a String y compararlo 
+        String s = (String) o;
+        if (s.equals(nombre)) {
+            return true;
+        }
+        //Hacer typecast del objeto a Estado y compararlo 
         Estado e = (Estado) o;
-
-        //Comparar los nombres
-        return nombre.equals(e.nombre);
+        return e.nombre.equals(nombre);
     }
 
     @Override

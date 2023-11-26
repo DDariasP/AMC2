@@ -14,16 +14,10 @@ public class AFND implements IProceso {
 
     public final int tipo;
     public Macroestado iniciales;
+    public Macroestado verde;
     public ArrayList<Estado> listaE;
     public ArrayList<Transicion> listaT;
     public ArrayList<Transicion> listaL;
-
-    public AFND() {
-        tipo = 1;
-        listaE = new ArrayList<>();
-        listaT = new ArrayList<>();
-        listaL = new ArrayList<>();
-    }
 
     public AFND(Estado ini, ArrayList<Estado> a, ArrayList<Transicion> b, ArrayList<Transicion> c) {
         tipo = 1;
@@ -31,6 +25,7 @@ public class AFND implements IProceso {
         listaT = b;
         listaL = c;
         iniciales = clausuraLambda(ini);
+        verde = clausuraLambda(ini);
     }
 
     @Override
@@ -120,6 +115,37 @@ public class AFND implements IProceso {
     @Override
     public int getTipo() {
         return tipo;
+    }
+
+    public static boolean paso(AFND a, String s) {
+        Macroestado comprobar = a.verde;
+        System.out.println("verde:");
+        for (int abc = 0; abc < comprobar.size(); abc++) {
+            System.out.println(comprobar.getE(abc));
+        }
+        System.out.println("");
+        System.out.println("simbolo:" + s);
+        int i = 0;
+        Macroestado siguiente = new Macroestado();
+        while (i < comprobar.size()) {
+            Estado etmp = comprobar.getE(i);
+            for (int j = 0; j < a.listaT.size(); j++) {
+                Transicion ttmp = a.listaT.get(j);
+                if (ttmp.origen == etmp && ttmp.simbolo.equals(s)) {
+                    System.out.println("etmp:" + etmp);
+                    System.out.println("destino:" + ttmp.destino);
+                    Macroestado metmp = a.clausuraLambda(ttmp.destino);
+                    for (int m = 0; m < metmp.size(); m++) {
+                        siguiente.addE(metmp.getE(m));
+                    }
+                }
+            }
+            i++;
+        }
+        System.out.println("siguiente:" + siguiente);
+        a.verde = siguiente;
+        System.out.println("");
+        return (siguiente.size() > 0);
     }
 
 }

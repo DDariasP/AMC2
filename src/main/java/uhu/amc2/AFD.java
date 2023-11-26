@@ -14,18 +14,14 @@ public class AFD implements IProceso {
 
     public final int tipo;
     public Estado inicial;
+    public Estado verde;
     public ArrayList<Estado> listaE;
     public ArrayList<Transicion> listaT;
-
-    public AFD() {
-        tipo = 0;
-        listaE = new ArrayList<>();
-        listaT = new ArrayList<>();
-    }
 
     public AFD(Estado ini, ArrayList<Estado> a, ArrayList<Transicion> b) {
         tipo = 0;
         inicial = ini;
+        verde = ini;
         listaE = a;
         listaT = b;
     }
@@ -73,6 +69,21 @@ public class AFD implements IProceso {
     @Override
     public int getTipo() {
         return tipo;
+    }
+
+    public static boolean paso(AFD a, String s) {
+        Estado actual = a.verde;
+        int i = 0;
+        boolean encontrado = false;
+        while (i < a.listaT.size() && !encontrado) {
+            Transicion t = a.listaT.get(i);
+            if (t.origen == actual && t.simbolo.equals(s)) {
+                encontrado = true;
+                a.verde = t.destino;
+            }
+            i++;
+        }
+        return encontrado;
     }
 
 }

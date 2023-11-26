@@ -1,7 +1,7 @@
 package uhu.amc2;
 
-import java.awt.Cursor;
 import java.io.File;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -14,6 +14,7 @@ public class Menu extends javax.swing.JFrame {
     public static String fileName;
     public static File file;
     public static IProceso automata;
+    public static String cadena;
 
     /**
      * Creates new form Menu
@@ -139,10 +140,31 @@ public class Menu extends javax.swing.JFrame {
 
     private void botonOpcion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOpcion1ActionPerformed
         try {
-            //crear automata desde teclado
-
+            //tipo
+            int tipo = Data.leerTipo(this);
+            //estados
+            ArrayList<Estado> listaE = Data.leerEstados(this);
+            //inicial
+            Estado inicial = Data.leerInicial(this, listaE);
+            //finales
+            Data.leerFinales(this, listaE);
+            //transiciones
+            ArrayList<Transicion> listaT;
+            ArrayList<Transicion> listaL;
+            switch (tipo) {
+                case 0:
+                    listaT = Data.leerTransicionesAFD(this, listaE);
+                    automata = new AFD(inicial, listaE, listaT);
+                    break;
+                case 1:
+                    listaT = Data.leerTransicionesAFND(this, listaE);
+                    listaL = Data.leerTransicionesLambda(this, listaE);
+                    automata = new AFND(inicial, listaE, listaT, listaL);
+                    break;
+            }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Input no válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("message:" + e.getMessage());
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_botonOpcion1ActionPerformed
 
@@ -159,43 +181,96 @@ public class Menu extends javax.swing.JFrame {
                 file = fc.getSelectedFile();
                 fileName = file.getName();
                 automata = Data.parsearSM(file);
-                labelArchivo.setText("Autómata cargado: " + fileName);
+                if (automata != null) {
+                    labelArchivo.setText("Autómata cargado: " + fileName);
+                } else {
+                    throw new Exception("Archivo no válido.");
+                }
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Archivo no válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_botonOpcion2ActionPerformed
 
     private void botonOpcion3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOpcion3ActionPerformed
         try {
-            
+            Object input = JOptionPane.showInputDialog(this,
+                    "Cadena:", "Introducir una cadena", JOptionPane.QUESTION_MESSAGE);
+            if (input != null) {
+                String s = String.valueOf(input);
+                if (s.length() <= 20) {
+                    cadena = s;
+                    labelCadena.setText("Cadena cargada: '" + cadena + "'");
+                } else {
+                    throw new Exception("Cadena no válida.");
+                }
+            }
         } catch (Exception e) {
-            setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-            JOptionPane.showMessageDialog(this, "No hay ningún array cargado.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_botonOpcion3ActionPerformed
 
     private void botonOpcion4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOpcion4ActionPerformed
         try {
-            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            
+            if (automata == null) {
+                throw new Exception("No hay ningún autómata cargado.");
+            }
+            if (cadena == null) {
+                throw new Exception("No hay ninguna cadena cargada.");
+            }
+            boolean reconocida = automata.reconocer(cadena);
+            String mensaje;
+            if (reconocida) {
+                mensaje = "Cadena " + cadena + " aceptada";
+            } else {
+                mensaje = "Cadena " + cadena + " rechazada";
+            }
+            switch (automata.getTipo()) {
+                case 0:
+                    new GrafoAFD(automata);
+                    break;
+                case 1:
+                    new GrafoAFND(automata);
+                    break;
+            }
+            JOptionPane.showMessageDialog(this, mensaje, "Reconocer cadena", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {
-            setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-            JOptionPane.showMessageDialog(this, "No hay ningún array cargado.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Aviso", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_botonOpcion4ActionPerformed
 
     private void botonOpcion5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOpcion5ActionPerformed
         try {
+            if (automata == null) {
+                throw new Exception("No hay ningún autómata cargado.");
+            }
+            if (cadena == null) {
+                throw new Exception("No hay ninguna cadena cargada.");
+            }
+            JFrame grafo = null;
+            switch (automata.getTipo()) {
+                case 0:
+                    grafo = new GrafoAFD(automata);
+                    break;
+                case 1:
+                    grafo = new GrafoAFND(automata);
+                    break;
+            }
             
+            
+            
+            
+            
+
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Aviso", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_botonOpcion5ActionPerformed
 
     public static void main(String args[]) {
         Menu m = new Menu();
         m.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        m.setBounds(200, 200, 370, 500);
+        m.setBounds(200, 200, 370, 450);
         m.setTitle("AMC - Práctica 2");
         m.setVisible(true);
     }

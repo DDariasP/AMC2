@@ -1,6 +1,7 @@
 package uhu.amc2;
 
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
+import edu.uci.ics.jung.algorithms.layout.KKLayout;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
@@ -20,19 +21,22 @@ public class JungDirectedGraphWithEdgeLabels {
         graph.addVertex("A");
         graph.addVertex("B");
         graph.addVertex("C");
-        
-        Collection<String> v = graph.getVertices(); 
+        graph.addVertex("D");
+        graph.addVertex("E");
+
+        Collection<String> v = graph.getVertices();
         System.out.println(v);
-        
 
         // Add directed edges with labels
         graph.addEdge("Edge1", "A", "B", EdgeType.DIRECTED);
         graph.addEdge("Edge2", "B", "C", EdgeType.DIRECTED);
         graph.addEdge("Edge3", "C", "A", EdgeType.DIRECTED);
         graph.addEdge("Edge4", "A", "C", EdgeType.DIRECTED);
+        graph.addEdge("Edge5", "C", "D", EdgeType.DIRECTED);
+        graph.addEdge("Edge6", "D", "E", EdgeType.DIRECTED);
 
         // Create a visualization viewer with a layout
-        VisualizationViewer<String, String> vv = new VisualizationViewer<>(new CircleLayout(graph));
+        VisualizationViewer<String, String> vv = new VisualizationViewer<>(new KKLayout(graph));
         vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
         vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
 
@@ -44,7 +48,7 @@ public class JungDirectedGraphWithEdgeLabels {
                 return Color.GREEN; // color for non-picked vertices
             }
         });
-        
+
         // Set up the vertex shape and paint transformer using Java 8 Function
         Function<String, Paint> vertexPaint = vertex -> {
             // Customize the vertex color based on your logic
