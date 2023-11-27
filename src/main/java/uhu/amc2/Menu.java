@@ -1,5 +1,6 @@
 package uhu.amc2;
 
+import edu.uci.ics.jung.visualization.VisualizationViewer;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -225,14 +226,21 @@ public class Menu extends javax.swing.JFrame {
             } else {
                 mensaje = "Cadena " + cadena + " rechazada";
             }
+            VisualizationViewer<String, String> grafo = null;
             switch (automata.getTipo()) {
                 case 0:
-                    new GrafoAFD(automata);
+                    grafo = GrafoAFD.crear(Menu.automata);
                     break;
                 case 1:
-                    new GrafoAFND(automata);
+                    grafo = GrafoAFND.crear(Menu.automata);
                     break;
             }
+            //crear el JFrame y mostrar el grafo
+            JFrame frame = new JFrame(fileName);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frame.getContentPane().add(grafo);
+            frame.setBounds(600, 50, 800, 800);
+            frame.setVisible(true);
             JOptionPane.showMessageDialog(this, mensaje, "Reconocer cadena", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Aviso", JOptionPane.WARNING_MESSAGE);
@@ -240,31 +248,22 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_botonOpcion4ActionPerformed
 
     private void botonOpcion5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOpcion5ActionPerformed
-        try {
-            if (automata == null) {
-                throw new Exception("No hay ningún autómata cargado.");
-            }
-            if (cadena == null) {
-                throw new Exception("No hay ninguna cadena cargada.");
-            }
-            JFrame grafo = null;
-            switch (automata.getTipo()) {
-                case 0:
-                    grafo = new GrafoAFD(automata);
-                    break;
-                case 1:
-                    grafo = new GrafoAFND(automata);
-                    break;
-            }
-            
-            
-            
-            
-            
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Aviso", JOptionPane.WARNING_MESSAGE);
-        }
+//        try {
+//            if (automata == null) {
+//                throw new Exception("No hay ningún autómata cargado.");
+//            }
+//            if (cadena == null) {
+//                throw new Exception("No hay ninguna cadena cargada.");
+//            }
+        //abrir frame Opcion5
+        Opcion5 f = new Opcion5(automata, cadena);
+        f.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        f.setBounds(250, 250, 300, 350);
+        f.setTitle("Paso a paso");
+        f.setVisible(true);
+//        } catch (Exception e) {
+//            JOptionPane.showMessageDialog(this, e.getMessage(), "Aviso", JOptionPane.WARNING_MESSAGE);
+//        }
     }//GEN-LAST:event_botonOpcion5ActionPerformed
 
     public static void main(String args[]) {

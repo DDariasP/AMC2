@@ -28,6 +28,16 @@ public class AFND implements IProceso {
         verde = clausuraLambda(ini);
     }
 
+    public AFND(IProceso a) {
+        AFND original = (AFND) a;
+        tipo = 1;
+        iniciales = original.iniciales;
+        verde = original.iniciales;
+        listaE = original.listaE;
+        listaT = original.listaT;
+        listaL = original.listaL;
+    }
+
     @Override
     public boolean esFinal(String estado) {
         int pos = Estado.pertenece(estado, listaE);
@@ -146,6 +156,10 @@ public class AFND implements IProceso {
         a.verde = siguiente;
         System.out.println("");
         return (siguiente.size() > 0);
+    }
+
+    public static AFND copiar(IProceso a) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

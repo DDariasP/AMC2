@@ -26,6 +26,15 @@ public class AFD implements IProceso {
         listaT = b;
     }
 
+    public AFD(IProceso a) {
+        AFD original = (AFD) a;
+        tipo = 0;
+        inicial = original.inicial;
+        verde = original.inicial;
+        listaE = original.listaE;
+        listaT = original.listaT;
+    }
+
     @Override
     public boolean esFinal(String estado) {
         int pos = Estado.pertenece(estado, listaE);

@@ -1,6 +1,7 @@
 uhu/amc2/Macroestado.class
 uhu/amc2/UpdateJFrameContent.class
 uhu/amc2/Menu$1.class
+uhu/amc2/Opcion5$1.class
 uhu/amc2/Data.class
 uhu/amc2/UpdateJFrameContent$1.class
 uhu/amc2/AFD.class
@@ -10,6 +11,7 @@ uhu/amc2/AFND.class
 uhu/amc2/Menu$4.class
 uhu/amc2/Menu$3.class
 uhu/amc2/Estado.class
+uhu/amc2/Opcion5.class
 uhu/amc2/Menu$5.class
 uhu/amc2/Transicion.class
 uhu/amc2/GrafoAFND.class

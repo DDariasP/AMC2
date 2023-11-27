@@ -39,11 +39,7 @@ public class Estado {
         if (o == this) {
             return true;
         }
-        //Hacer typecast del objeto a String y compararlo 
-        String s = (String) o;
-        if (s.equals(nombre)) {
-            return true;
-        }
+
         //Hacer typecast del objeto a Estado y compararlo 
         Estado e = (Estado) o;
         return e.nombre.equals(nombre);
