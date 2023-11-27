@@ -6,10 +6,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
+ * Clase que muestra el autómata paso a paso.
  *
  * @author diego
  */
-public class Opcion5 extends javax.swing.JFrame {
+public class Opcion5 extends JFrame {
 
     public int i;
     public String cadena;
@@ -18,10 +19,13 @@ public class Opcion5 extends javax.swing.JFrame {
     public JFrame gFrame;
 
     /**
-     * Creates new form Opcion5
+     * Constructor.
+     *
+     * @param a Autómata.
+     * @param c String con la cadena de símbolos a comprobar.
      */
     public Opcion5(IProceso a, String c) {
-        //inicializar variables
+        //inicializar los atributos
         i = -1;
         cadena = c;
         switch (a.getTipo()) {
@@ -34,15 +38,16 @@ public class Opcion5 extends javax.swing.JFrame {
                 grafo = GrafoAFND.crear(automata);
                 break;
         }
+
         //crear el JFrame y mostrar el grafo
-        JPanel panel = new JPanel();
-        panel.add(grafo);
         gFrame = new JFrame(Menu.fileName);
         gFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         gFrame.add(grafo);
         gFrame.setBounds(600, 50, 800, 800);
         gFrame.setVisible(true);
         initComponents();
+
+        //actualizar la etiqueta cadena
         labelString.setText("Cadena: '" + c + "'");
     }
 
@@ -105,43 +110,52 @@ public class Opcion5 extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Avanza en el reconocimiento de la cadena cuando se pulsa el botón
+     * "Siguiente".
+     *
+     * @param evt Acción sobre el botón.
+     */
     private void buttonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextActionPerformed
         //avanzar en la cadena
         i++;
+
+        //si aún no ha terminado de analizar la cadena
         if (i < cadena.length()) {
             String s = String.valueOf(cadena.charAt(i));
             labelChar.setText("Último carácter: '" + s + "'");
             //actualizar el grafo
-            boolean avanza = false;
+            boolean avanza = false; //true cuando encuentre una transición válida
             switch (automata.getTipo()) {
                 case 0:
                     avanza = AFD.paso((AFD) automata, s);
                     labelTran.setText("Última transición: " + ((AFD) automata).ultima);
-                    System.out.println("verde: " + ((AFD) automata).verde.toString());
                     grafo = GrafoAFD.crear(automata);
                     break;
                 case 1:
                     avanza = AFND.paso((AFND) automata, s);
                     labelTran.setText("Última transición: " + ((AFND) automata).ultimas);
-                    System.out.println("verde: " + ((AFND) automata).verde.toString());
                     grafo = GrafoAFND.crear(automata);
                     break;
             }
+            //termina si no ha encontrado ninguna transición
             if (!avanza) {
                 i = 100;
             }
+            //muestra el grafo
             JPanel panel = new JPanel();
             panel.add(grafo);
             gFrame.add(grafo);
             gFrame.setVisible(false);
             gFrame.setVisible(true);
-        } else {
-            //reconocer la cadena
+
+        } else { //si ha terminado el análisis
+            //reconocer la cadena (true si ha llegado a algún estado final)
             boolean reconocida = false;
             String mensaje;
             switch (automata.getTipo()) {
                 case 0:
-                    reconocida = ((AFD) automata).esFinal(((AFD) automata).verde.nombre);
+                    reconocida = ((AFD) automata).verde.esFinal;
                     break;
                 case 1:
                     reconocida = ((AFND) automata).esFinal(((AFND) automata).verde);
@@ -152,6 +166,7 @@ public class Opcion5 extends javax.swing.JFrame {
             } else {
                 mensaje = "Cadena '" + cadena + "' rechazada";
             }
+            //popup que informa sobre el reconocimiento de la cadena
             JOptionPane.showMessageDialog(this, mensaje, "Reconocer cadena", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_buttonNextActionPerformed

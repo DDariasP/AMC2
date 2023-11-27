@@ -1,12 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package uhu.amc2;
 
 import java.util.ArrayList;
 
 /**
+ * Implementa un AFND y los métodos que definen su comportamiento.
  *
  * @author diego
  */
@@ -20,6 +17,14 @@ public class AFND implements IProceso {
     public ArrayList<Transicion> listaT;
     public ArrayList<Transicion> listaL;
 
+    /**
+     * Constructor con parámetros.
+     *
+     * @param ini Estado inicial.
+     * @param a Lista de estados.
+     * @param b Lista de transiciones.
+     * @param c Lista de transiciones lambda.
+     */
     public AFND(Estado ini, ArrayList<Estado> a, ArrayList<Transicion> b, ArrayList<Transicion> c) {
         tipo = 1;
         listaE = a;
@@ -29,6 +34,13 @@ public class AFND implements IProceso {
         verde = clausuraLambda(ini);
     }
 
+    /**
+     * Constructor de copia. Los métodos que modifican listas lo hacen creando
+     * listas nuevas y sustituyendo las referencias, por lo que la copia puede
+     * compartir las referencias del original.
+     *
+     * @param a Autómata original.
+     */
     public AFND(IProceso a) {
         AFND original = (AFND) a;
         tipo = 1;
@@ -39,6 +51,12 @@ public class AFND implements IProceso {
         listaL = original.listaL;
     }
 
+    /**
+     * Comprueba si un estado es final.
+     *
+     * @param estado Nombre del estado a comprobar.
+     * @return true si es final o false en caso contrario.
+     */
     @Override
     public boolean esFinal(String estado) {
         int pos = Estado.pertenece(estado, listaE);
@@ -49,6 +67,12 @@ public class AFND implements IProceso {
         }
     }
 
+    /**
+     * Comprueba si un macroestado es final.
+     *
+     * @param macro Macroestado a pendientes.
+     * @return true si alguno de sus estados es final o false en caso contrario.
+     */
     public boolean esFinal(Macroestado macro) {
         boolean encontrado = false;
         int i = 0;
@@ -62,102 +86,146 @@ public class AFND implements IProceso {
         return encontrado;
     }
 
+    /**
+     * Calcula la clausura lambda de un estado, es decir, la lista de estados a
+     * los que se puede llegar desde el recibido, mediante transiciones lambda,
+     * incluyendo el estado recibido.
+     *
+     * @param e Estado para calcular la clausura lambda.
+     * @return Macroestado resultante.
+     */
     public Macroestado clausuraLambda(Estado e) {
+        //crea un nuevo macroestado
         Macroestado nuevo = new Macroestado();
+        //añade el estado recibido al macroestado
         nuevo.addE(e);
-        ArrayList<Estado> comprobar = new ArrayList<>();
-        comprobar.add(e);
-        while (!comprobar.isEmpty()) {
-            Estado tmp = comprobar.get(0);
-            comprobar.remove(0);
+        //crea una lista de estados pendientes por comprobar
+        ArrayList<Estado> pendientes = new ArrayList<>();
+        //añade el estado recibido a la lista de pendientes
+        pendientes.add(e);
+        //mientras queden estados pendientes
+        while (!pendientes.isEmpty()) {
+            //toma el primer estado de pendientes
+            Estado tmp = pendientes.get(0);
+            //lo elimina de pendientes
+            pendientes.remove(0);
+            //busca en la lista de transiciones lambda
             for (int i = 0; i < listaL.size(); i++) {
                 Transicion t = listaL.get(i);
+                //aquellas con origen igual al estado tomado
                 if (t.origen == tmp) {
-                    comprobar.add(t.destino);
+                    //se añade el destino a la lista de pendientes
+                    pendientes.add(t.destino);
+                    //se añade el destino a la clausura lambda
                     nuevo.addE(t.destino);
                 }
             }
         }
+        //devuelve el macroestado resultante, que puede estar vacío
         return nuevo;
     }
 
+    /**
+     * Comprueba la cadena pasada e indica si el autómata la reconoce o no.
+     *
+     * @param cadena String con la cadena a comprobar.
+     * @return true en caso de reconocer la cadena o false en caso contrario.
+     */
     @Override
     public boolean reconocer(String cadena) {
-        Macroestado comprobar = iniciales;
-        System.out.println("iniciales:");
-        for (int abc = 0; abc < comprobar.size(); abc++) {
-            System.out.println(comprobar.getE(abc));
-        }
-        System.out.println("");
-        int i = 0;
-        while (i < cadena.length()) {
+        //el primer macroestado es la clausura lambda del inicial
+        Macroestado actual = iniciales;
+        //analiza cada carácter de la cadena
+        for (int i = 0; i < cadena.length(); i++) {
+            //toma el siguiente carácter
             String simbolo = String.valueOf(cadena.charAt(i));
-            System.out.println("simbolo:" + simbolo);
-            int j = 0;
+            //el macroestado del siguiente paso comienza vacío
             Macroestado siguiente = new Macroestado();
-            while (j < comprobar.size()) {
-                Estado etmp = comprobar.getE(j);
+            //comprueba cada estado del macroestado actual
+            for (int j = 0; j < actual.size(); j++) {
+                Estado etmp = actual.getE(j);
+                //comprueba todas las transiciones posibles
                 for (int k = 0; k < listaT.size(); k++) {
                     Transicion ttmp = listaT.get(k);
+                    //cuando el estado transiciona con el carácter que se analiza
                     if (ttmp.origen == etmp && ttmp.simbolo.equals(simbolo)) {
-                        System.out.println("etmp:" + etmp);
-                        System.out.println("destino:" + ttmp.destino);
+                        //hace la clausura lambda de su destino
                         Macroestado metmp = clausuraLambda(ttmp.destino);
+                        //añade los estados de la clausura lambda al siguiente macroestado
                         for (int m = 0; m < metmp.size(); m++) {
                             siguiente.addE(metmp.getE(m));
                         }
                     }
                 }
-                j++;
             }
-            System.out.println("siguiente:" + siguiente);
-            comprobar = siguiente;
-            System.out.println("");
-            i++;
+            //si no hay transiciones posibles, rechaza la cadena
+            if (siguiente.size() == 0) {
+                return false;
+            }
+            //da el siguiente paso
+            actual = siguiente;
         }
-        return esFinal(comprobar);
+        //devuelve true si algún estado es final
+        return esFinal(actual);
     }
 
+    /**
+     * Devuelve una representación en formato String de los estados y las
+     * transiciones del autómata.
+     *
+     * @return String con los datos del autómata.
+     */
     @Override
     public String toString() {
         return ("AFND = { estados:" + listaE.toString() + ", transiciones:" + listaT.toString() + listaL.toString() + " }");
     }
 
+    /**
+     * Devuelve el tipo de autómata.
+     *
+     * @return int que codifica el tipo del autómata.
+     */
     @Override
     public int getTipo() {
         return tipo;
     }
 
+    /**
+     * Comprueba paso a paso si el autómata reconoce o no la cadena.
+     *
+     * @param a AFND donde se da el paso.
+     * @param s String con el carácter a comprobar.
+     * @return true en caso de reconocer el carácter o false en caso contrario.
+     */
     public static boolean paso(AFND a, String s) {
-        Macroestado comprobar = a.verde;
-        System.out.println("verde:");
-        for (int abc = 0; abc < comprobar.size(); abc++) {
-            System.out.println(comprobar.getE(abc));
-        }
-        System.out.println("");
-        System.out.println("simbolo:" + s);
-        int i = 0;
+        //analiza el macroestado actual
+        Macroestado pendientes = a.verde;
+        //el macroestado del siguiente paso comienza vacío
         Macroestado siguiente = new Macroestado();
+        //guarda las transiciones que hace para mostrarlas
         a.ultimas = new ArrayList<>();
-        while (i < comprobar.size()) {
-            Estado etmp = comprobar.getE(i);
+        //comprueba cada estado del macroestado actual
+        for (int i = 0; i < pendientes.size(); i++) {
+            Estado etmp = pendientes.getE(i);
+            //comprueba todas las transiciones posibles
             for (int j = 0; j < a.listaT.size(); j++) {
                 Transicion ttmp = a.listaT.get(j);
+                //cuando el estado transiciona con el carácter que se analiza
                 if (ttmp.origen == etmp && ttmp.simbolo.equals(s)) {
+                    //guarda la transición realizada
                     a.ultimas.add(ttmp);
-                    System.out.println("etmp:" + etmp);
-                    System.out.println("destino:" + ttmp.destino);
+                    //hace la clausura lambda de su destino
                     Macroestado metmp = a.clausuraLambda(ttmp.destino);
+                    //añade los estados de la clausura lambda al siguiente macroestado
                     for (int m = 0; m < metmp.size(); m++) {
                         siguiente.addE(metmp.getE(m));
                     }
                 }
             }
-            i++;
         }
-        System.out.println("siguiente:" + siguiente);
+        //prepara siguiente paso
         a.verde = siguiente;
-        System.out.println("");
+        //devuelve false si no hay transiciones posibles
         return (siguiente.size() > 0);
     }
 

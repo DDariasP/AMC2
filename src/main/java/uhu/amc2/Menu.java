@@ -7,10 +7,11 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
+ * Menú principal con las opciones de la app.
  *
  * @author diego
  */
-public class Menu extends javax.swing.JFrame {
+public class Menu extends JFrame {
 
     public static String fileName;
     public static File file;
@@ -18,7 +19,7 @@ public class Menu extends javax.swing.JFrame {
     public static String cadena;
 
     /**
-     * Creates new form Menu
+     * Constructor que inicializa los elementos del menú.
      */
     public Menu() {
         initComponents();
@@ -139,6 +140,11 @@ public class Menu extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Introducir un autómata desde teclado.
+     *
+     * @param evt Acción sobre el botón.
+     */
     private void botonOpcion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOpcion1ActionPerformed
         try {
             //tipo
@@ -152,26 +158,34 @@ public class Menu extends javax.swing.JFrame {
             //transiciones
             ArrayList<Transicion> listaT;
             ArrayList<Transicion> listaL;
+            //crear el autómata
             switch (tipo) {
                 case 0:
                     listaT = Data.leerTransicionesAFD(this, listaE);
                     automata = new AFD(inicial, listaE, listaT);
+                    labelArchivo.setText("Autómata cargado: AFD");
                     break;
                 case 1:
                     listaT = Data.leerTransicionesAFND(this, listaE);
                     listaL = Data.leerTransicionesLambda(this, listaE);
                     automata = new AFND(inicial, listaE, listaT, listaL);
+                    labelArchivo.setText("Autómata cargado: AFND");
                     break;
             }
         } catch (Exception e) {
-            System.out.println("message:" + e.getMessage());
+            //mensaje de error cuando algún input no es válido
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_botonOpcion1ActionPerformed
 
+    /**
+     * Introducir un autómata leyendo un archivo ".sm".
+     *
+     * @param evt Acción sobre el botón.
+     */
     private void botonOpcion2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOpcion2ActionPerformed
         try {
-            //abrir popup
+            //abrir popup para elegir el archivo
             JFileChooser fc = new JFileChooser();
             fc.setDialogTitle("Elegir un archivo .sm");
             FileNameExtensionFilter filter = new FileNameExtensionFilter(".sm", "sm");
@@ -185,32 +199,44 @@ public class Menu extends javax.swing.JFrame {
                 if (automata != null) {
                     labelArchivo.setText("Autómata cargado: " + fileName);
                 } else {
-                    throw new Exception("Archivo no válido.");
+                    throw new Exception();
                 }
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            //mensaje de error cuando el archivo no es válido
+            JOptionPane.showMessageDialog(this, "Archivo no válido.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_botonOpcion2ActionPerformed
 
+    /**
+     * Introducir una cadena para reconocer".
+     *
+     * @param evt Acción sobre el botón.
+     */
     private void botonOpcion3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOpcion3ActionPerformed
         try {
             Object input = JOptionPane.showInputDialog(this,
                     "Cadena:", "Introducir una cadena", JOptionPane.QUESTION_MESSAGE);
             if (input != null) {
                 String s = String.valueOf(input);
-                if (s.length() <= 20) {
+                if (s.length() <= 20) { //longitud máxima 20
                     cadena = s;
                     labelCadena.setText("Cadena cargada: '" + cadena + "'");
                 } else {
-                    throw new Exception("Cadena no válida.");
+                    throw new Exception();
                 }
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            //mensaje de error cuando la cadena no es válida
+            JOptionPane.showMessageDialog(this, "Cadena no válida.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_botonOpcion3ActionPerformed
 
+    /**
+     * Reconocer la cadena mediante el autómata de una vez.
+     *
+     * @param evt Acción sobre el botón.
+     */
     private void botonOpcion4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOpcion4ActionPerformed
         try {
             if (automata == null) {
@@ -219,13 +245,15 @@ public class Menu extends javax.swing.JFrame {
             if (cadena == null) {
                 throw new Exception("No hay ninguna cadena cargada.");
             }
+            //reconocer cadena
             boolean reconocida = automata.reconocer(cadena);
             String mensaje;
             if (reconocida) {
-                mensaje = "Cadena " + cadena + " aceptada";
+                mensaje = "Cadena '" + cadena + "' aceptada";
             } else {
-                mensaje = "Cadena " + cadena + " rechazada";
+                mensaje = "Cadena '" + cadena + "' rechazada";
             }
+            //crear grafo
             VisualizationViewer<String, String> grafo = null;
             switch (automata.getTipo()) {
                 case 0:
@@ -238,34 +266,47 @@ public class Menu extends javax.swing.JFrame {
             //crear el JFrame y mostrar el grafo
             JFrame frame = new JFrame(fileName);
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            frame.getContentPane().add(grafo);
+            frame.add(grafo);
             frame.setBounds(600, 50, 800, 800);
             frame.setVisible(true);
+            //popup que informa sobre el reconocimiento de la cadena
             JOptionPane.showMessageDialog(this, mensaje, "Reconocer cadena", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {
+            //mensaje de aviso cuando no hay autómata/cadena
             JOptionPane.showMessageDialog(this, e.getMessage(), "Aviso", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_botonOpcion4ActionPerformed
 
+    /**
+     * Reconocer la cadena mediante el autómata paso a paso.
+     *
+     * @param evt Acción sobre el botón.
+     */
     private void botonOpcion5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOpcion5ActionPerformed
-//        try {
-//            if (automata == null) {
-//                throw new Exception("No hay ningún autómata cargado.");
-//            }
-//            if (cadena == null) {
-//                throw new Exception("No hay ninguna cadena cargada.");
-//            }
-        //abrir frame Opcion5
-        Opcion5 f = new Opcion5(automata, cadena);
-        f.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        f.setBounds(100, 300, 500, 240);
-        f.setTitle("Paso a paso");
-        f.setVisible(true);
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(this, e.getMessage(), "Aviso", JOptionPane.WARNING_MESSAGE);
-//        }
+        try {
+            if (automata == null) {
+                throw new Exception("No hay ningún autómata cargado.");
+            }
+            if (cadena == null) {
+                throw new Exception("No hay ninguna cadena cargada.");
+            }
+            //abrir frame Opcion5
+            Opcion5 f = new Opcion5(automata, cadena);
+            f.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            f.setBounds(100, 300, 500, 240);
+            f.setTitle("Paso a paso");
+            f.setVisible(true);
+        } catch (Exception e) {
+            //mensaje de aviso cuando no hay autómata/cadena
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Aviso", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_botonOpcion5ActionPerformed
 
+    /**
+     * Método principal para mostrar el menú.
+     *
+     * @param args Argumentos.
+     */
     public static void main(String args[]) {
         Menu m = new Menu();
         m.setDefaultCloseOperation(EXIT_ON_CLOSE);
