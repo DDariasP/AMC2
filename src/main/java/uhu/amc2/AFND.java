@@ -15,6 +15,7 @@ public class AFND implements IProceso {
     public final int tipo;
     public Macroestado iniciales;
     public Macroestado verde;
+    public ArrayList<Transicion> ultimas;
     public ArrayList<Estado> listaE;
     public ArrayList<Transicion> listaT;
     public ArrayList<Transicion> listaL;
@@ -137,11 +138,13 @@ public class AFND implements IProceso {
         System.out.println("simbolo:" + s);
         int i = 0;
         Macroestado siguiente = new Macroestado();
+        a.ultimas = new ArrayList<>();
         while (i < comprobar.size()) {
             Estado etmp = comprobar.getE(i);
             for (int j = 0; j < a.listaT.size(); j++) {
                 Transicion ttmp = a.listaT.get(j);
                 if (ttmp.origen == etmp && ttmp.simbolo.equals(s)) {
+                    a.ultimas.add(ttmp);
                     System.out.println("etmp:" + etmp);
                     System.out.println("destino:" + ttmp.destino);
                     Macroestado metmp = a.clausuraLambda(ttmp.destino);
@@ -156,10 +159,6 @@ public class AFND implements IProceso {
         a.verde = siguiente;
         System.out.println("");
         return (siguiente.size() > 0);
-    }
-
-    public static AFND copiar(IProceso a) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

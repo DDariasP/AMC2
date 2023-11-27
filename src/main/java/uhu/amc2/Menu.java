@@ -258,7 +258,7 @@ public class Menu extends javax.swing.JFrame {
         //abrir frame Opcion5
         Opcion5 f = new Opcion5(automata, cadena);
         f.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        f.setBounds(250, 250, 300, 350);
+        f.setBounds(100, 300, 500, 240);
         f.setTitle("Paso a paso");
         f.setVisible(true);
 //        } catch (Exception e) {

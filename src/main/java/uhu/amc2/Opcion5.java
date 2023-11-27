@@ -43,7 +43,7 @@ public class Opcion5 extends javax.swing.JFrame {
         gFrame.setBounds(600, 50, 800, 800);
         gFrame.setVisible(true);
         initComponents();
-        labelString.setText("Cadena: " + c);
+        labelString.setText("Cadena: '" + c + "'");
     }
 
     /**
@@ -80,26 +80,26 @@ public class Opcion5 extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(73, 73, 73)
+                .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(buttonNext)
                     .addComponent(labelTran)
                     .addComponent(labelString)
                     .addComponent(labelChar))
-                .addContainerGap(226, Short.MAX_VALUE))
+                .addContainerGap(190, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(53, 53, 53)
+                .addGap(32, 32, 32)
                 .addComponent(labelString)
-                .addGap(42, 42, 42)
+                .addGap(18, 18, 18)
                 .addComponent(labelTran)
-                .addGap(28, 28, 28)
+                .addGap(18, 18, 18)
                 .addComponent(labelChar)
-                .addGap(50, 50, 50)
+                .addGap(34, 34, 34)
                 .addComponent(buttonNext)
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         pack();
@@ -110,27 +110,31 @@ public class Opcion5 extends javax.swing.JFrame {
         i++;
         if (i < cadena.length()) {
             String s = String.valueOf(cadena.charAt(i));
-            labelChar.setText("Último carácter: " + s);
+            labelChar.setText("Último carácter: '" + s + "'");
             //actualizar el grafo
+            boolean avanza = false;
             switch (automata.getTipo()) {
                 case 0:
-                    AFD.paso((AFD) automata, s);
+                    avanza = AFD.paso((AFD) automata, s);
+                    labelTran.setText("Última transición: " + ((AFD) automata).ultima);
                     System.out.println("verde: " + ((AFD) automata).verde.toString());
                     grafo = GrafoAFD.crear(automata);
                     break;
                 case 1:
-                    AFND.paso((AFND) automata, s);
+                    avanza = AFND.paso((AFND) automata, s);
+                    labelTran.setText("Última transición: " + ((AFND) automata).ultimas);
                     System.out.println("verde: " + ((AFND) automata).verde.toString());
                     grafo = GrafoAFND.crear(automata);
                     break;
+            }
+            if (!avanza) {
+                i = 100;
             }
             JPanel panel = new JPanel();
             panel.add(grafo);
             gFrame.add(grafo);
             gFrame.setVisible(false);
             gFrame.setVisible(true);
-            //actualizar la etiqueta
-            labelTran.setText("Última transición: " + i);
         } else {
             //reconocer la cadena
             boolean reconocida = false;
@@ -144,9 +148,9 @@ public class Opcion5 extends javax.swing.JFrame {
                     break;
             }
             if (reconocida) {
-                mensaje = "Cadena " + cadena + " aceptada";
+                mensaje = "Cadena '" + cadena + "' aceptada";
             } else {
-                mensaje = "Cadena " + cadena + " rechazada";
+                mensaje = "Cadena '" + cadena + "' rechazada";
             }
             JOptionPane.showMessageDialog(this, mensaje, "Reconocer cadena", JOptionPane.INFORMATION_MESSAGE);
         }

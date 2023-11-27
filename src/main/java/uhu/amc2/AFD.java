@@ -15,6 +15,7 @@ public class AFD implements IProceso {
     public final int tipo;
     public Estado inicial;
     public Estado verde;
+    public Transicion ultima;
     public ArrayList<Estado> listaE;
     public ArrayList<Transicion> listaT;
 
@@ -84,14 +85,17 @@ public class AFD implements IProceso {
         Estado actual = a.verde;
         int i = 0;
         boolean encontrado = false;
+        Estado siguiente = new Estado("null");
         while (i < a.listaT.size() && !encontrado) {
             Transicion t = a.listaT.get(i);
             if (t.origen == actual && t.simbolo.equals(s)) {
                 encontrado = true;
-                a.verde = t.destino;
+                siguiente = t.destino;
+                a.ultima = t;
             }
             i++;
         }
+        a.verde = siguiente;
         return encontrado;
     }
 
