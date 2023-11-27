@@ -1,10 +1,16 @@
 TIPO: AFD
-ESTADOS: q0 q1 q2 q3
-INICIAL: q0
-FINALES: q2 q3
+ESTADOS: A B C D
+INICIAL: B
+FINALES: A B C
 TRANSICIONES:
-q0 '0' q1
-q0 '1' q2
-q1 '1' q3
-q2 '0' q1
+A '0' D
+A '1' B
+B '0' A
+B '1' C
+C '0' B
+C '1' D
+D '0' D
+D '1' D
 FIN
+//reconoce 101
+

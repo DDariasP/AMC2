@@ -38,11 +38,19 @@ public class GrafoAFD {
 
         //añadir las aristas
         grafo.addEdge("", "inicio", automata.inicial.nombre);
+        //todas las transiciones
         for (int i = 0; i < automata.listaT.size(); i++) {
-            //todas las transiciones
-            Transicion t = automata.listaT.get(i);
-            String nombre = "{" + t.origen.nombre + "," + t.simbolo + "," + t.destino.nombre + "}";
-            grafo.addEdge(nombre, t.origen.nombre, t.destino.nombre, EdgeType.DIRECTED);
+            Transicion ti = automata.listaT.get(i);
+            String simbolo = ti.simbolo;
+            //combina las que comparten origen y destino 
+            for (int j = i + 1; j < automata.listaT.size(); j++) {
+                Transicion tj = automata.listaT.get(j);
+                if (ti.origen.equals(tj.origen) && ti.destino.equals(tj.destino)) {
+                    simbolo = simbolo + "/" + tj.simbolo;
+                }
+            }
+            String nombre = "{" + ti.origen.nombre + "," + simbolo + "," + ti.destino.nombre + "}";
+            grafo.addEdge(nombre, ti.origen.nombre, ti.destino.nombre, EdgeType.DIRECTED);
         }
 
         //crear los visualizadores
@@ -54,17 +62,21 @@ public class GrafoAFD {
         //posición
         vv.getRenderer().getVertexLabelRenderer().setPosition(Position.CNTR);
         //forma y tamaño
-        vv.getRenderContext().setVertexShapeTransformer(vertex -> new java.awt.geom.Ellipse2D.Double(-10, -10, 40, 40));
+        vv.getRenderContext().setVertexShapeTransformer(vertex -> {
+            if (automata.esFinal(vertex)) {
+                return new java.awt.geom.Rectangle2D.Double(-10, -10, 40, 40);
+            } else {
+                return new java.awt.geom.Ellipse2D.Double(-10, -10, 40, 40);
+            }
+        });
         //color
         vv.getRenderContext().setVertexFillPaintTransformer(vertex -> {
             if (vertex.equals("inicio")) {
                 return Color.WHITE; //estado inicial en blanco
             } else if (automata.verde.nombre.equals(vertex)) {
                 return Color.GREEN; //estado actual en verde
-            } else if (automata.esFinal(vertex)) {
-                return Color.MAGENTA; //estados finales en magenta
             } else {
-                return Color.CYAN; //estados no finales en cyan
+                return Color.CYAN; //estados en cyan
             }
         });
 

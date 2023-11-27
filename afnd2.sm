@@ -1,0 +1,22 @@
+TIPO: AFND
+ESTADOS: P Q R S T U V
+INICIAL: P
+FINALES: V
+TRANSICIONES:
+Q 'b' R S
+S 'a' T P
+S 'c' U
+T 'b' V
+U 'a' Q S
+U 'c' V
+TRANSICIONES LAMBDA:
+P Q T
+Q R S
+R Q U
+T Q
+U S
+V R
+FIN
+//reconoce bbcc, acbcac, abac
+//no reconoce bcacaa, caa
+

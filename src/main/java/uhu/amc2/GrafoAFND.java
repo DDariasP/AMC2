@@ -38,26 +38,26 @@ public class GrafoAFND {
 
         //añadir las aristas
         grafo.addEdge("", "inicio", automata.iniciales.getE(0).nombre);
+        //todas las transiciones
         for (int i = 0; i < automata.listaT.size(); i++) {
-            //lee todas las transiciones mediante símbolos
-            Transicion te = automata.listaT.get(i);
-            String nombre = "{" + te.origen.nombre + ",";
-            int j = 0;
-            boolean encontrado = false;
-            while (!encontrado && j < automata.listaL.size()) {
-                //las combina con transiciones lambda (si existen) en una sola arista
-                Transicion tl = automata.listaL.get(j);
-                if (te.origen.equals(tl.origen) && te.destino.equals(tl.destino)) {
-                    nombre = nombre + te.simbolo + "/lambda," + te.destino + "}";
-                    encontrado = true;
+            Transicion ti = automata.listaT.get(i);
+            String simbolo = ti.simbolo;
+            //combina las que comparten origen y destino 
+            for (int j = i + 1; j < automata.listaT.size(); j++) {
+                Transicion tj = automata.listaT.get(j);
+                if (ti.origen.equals(tj.origen) && ti.destino.equals(tj.destino)) {
+                    simbolo = simbolo + "/" + tj.simbolo;
                 }
-                j++;
             }
-            //si no existen transiciones lambda entre origen y destino
-            if (!encontrado) {
-                nombre = nombre + te.simbolo + "," + te.destino + "}";
+            //combina las lambda que comparten origen y destino 
+            for (int j = 0; j < automata.listaL.size(); j++) {
+                Transicion tj = automata.listaL.get(j);
+                if (ti.origen.equals(tj.origen) && ti.destino.equals(tj.destino)) {
+                    simbolo = simbolo + "/" + tj.simbolo;
+                }
             }
-            grafo.addEdge(nombre, te.origen.nombre, te.destino.nombre, EdgeType.DIRECTED);
+            String nombre = "{" + ti.origen.nombre + "," + simbolo + "," + ti.destino.nombre + "}";
+            grafo.addEdge(nombre, ti.origen.nombre, ti.destino.nombre, EdgeType.DIRECTED);
         }
 
         //añadir las transiciones lambda restantes
@@ -76,17 +76,21 @@ public class GrafoAFND {
         //posición
         vv.getRenderer().getVertexLabelRenderer().setPosition(Position.CNTR);
         //forma y tamaño
-        vv.getRenderContext().setVertexShapeTransformer(vertex -> new java.awt.geom.Ellipse2D.Double(-10, -10, 40, 40));
+        vv.getRenderContext().setVertexShapeTransformer(vertex -> {
+            if (automata.esFinal(vertex)) {
+                return new java.awt.geom.Rectangle2D.Double(-10, -10, 40, 40);
+            } else {
+                return new java.awt.geom.Ellipse2D.Double(-10, -10, 40, 40);
+            }
+        });
         //color
         vv.getRenderContext().setVertexFillPaintTransformer(vertex -> {
             if (vertex.equals("inicio")) {
                 return Color.WHITE; //estado inicial en blanco
             } else if (Estado.pertenece(vertex, automata.verde.lista) != -1) {
                 return Color.GREEN; //estados actuales en verde
-            } else if (automata.esFinal(vertex)) {
-                return Color.MAGENTA; //estados finales en magenta
             } else {
-                return Color.CYAN; //estados no finales en cyan
+                return Color.CYAN; //estados en cyan
             }
         });
 

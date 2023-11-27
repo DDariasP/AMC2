@@ -19,13 +19,13 @@
 -docencoding
 'UTF-8'
 -doctitle
-'AMC2 v1.3 API'
+'AMC2 v1.4 API'
 -linkoffline
 'https://docs.oracle.com/en/java/javase/11/docs/api' '/home/diego/NetBeansProjects/AMC2/target/javadoc-bundle-options'
 -use
 -version
 -windowtitle
-'AMC2 v1.3 API'
+'AMC2 v1.4 API'
 uhu.amc2
 /home/diego/.m2/repository/net/sf/jung/jung-algorithms/2.1.1/jung-algorithms-2.1.1.jar = 1698449310887
 /home/diego/.m2/repository/net/sf/jung/jung-api/2.1.1/jung-api-2.1.1.jar = 1698449310787
@@ -35,25 +35,25 @@ uhu.amc2
 /home/diego/.m2/repository/net/sf/jung/jung-samples/2.1.1/jung-samples-2.1.1.jar = 1698449310875
 /home/diego/.m2/repository/net/sf/jung/jung-visualization/2.1.1/jung-visualization-2.1.1.jar = 1698449310899
 /home/diego/NetBeansProjects/AMC2/src/main/java = 1700766074494
-/home/diego/NetBeansProjects/AMC2/target/generated-sources/annotations = 1701121510875
-/home/diego/NetBeansProjects/AMC2/target/apidocs/allpackages-index.html = 1701121515835
-/home/diego/NetBeansProjects/AMC2/target/apidocs/constant-values.html = 1701121515755
-/home/diego/NetBeansProjects/AMC2/target/apidocs/package-search-index.js = 1701121515823
-/home/diego/NetBeansProjects/AMC2/target/apidocs/serialized-form.html = 1701121515763
-/home/diego/NetBeansProjects/AMC2/target/apidocs/help-doc.html = 1701121515843
-/home/diego/NetBeansProjects/AMC2/target/apidocs/deprecated-list.html = 1701121515835
-/home/diego/NetBeansProjects/AMC2/target/apidocs/stylesheet.css = 1701121515843
-/home/diego/NetBeansProjects/AMC2/target/apidocs/index.html = 1701121515839
-/home/diego/NetBeansProjects/AMC2/target/apidocs/type-search-index.zip = 1701121515827
-/home/diego/NetBeansProjects/AMC2/target/apidocs/search.js = 1701121515847
-/home/diego/NetBeansProjects/AMC2/target/apidocs/package-search-index.zip = 1701121515823
-/home/diego/NetBeansProjects/AMC2/target/apidocs/type-search-index.js = 1701121515827
-/home/diego/NetBeansProjects/AMC2/target/apidocs/index-all.html = 1701121515827
-/home/diego/NetBeansProjects/AMC2/target/apidocs/member-search-index.js = 1701121515827
-/home/diego/NetBeansProjects/AMC2/target/apidocs/overview-tree.html = 1701121515807
-/home/diego/NetBeansProjects/AMC2/target/apidocs/allclasses-index.html = 1701121515831
-/home/diego/NetBeansProjects/AMC2/target/apidocs/allclasses.html = 1701121515839
-/home/diego/NetBeansProjects/AMC2/target/apidocs/script.js = 1701121515843
-/home/diego/NetBeansProjects/AMC2/target/apidocs/element-list = 1701121515743
-/home/diego/NetBeansProjects/AMC2/target/apidocs/member-search-index.zip = 1701121515827
-/home/diego/NetBeansProjects/AMC2/target/apidocs/jquery-ui.overrides.css = 1701121515851
+/home/diego/NetBeansProjects/AMC2/target/generated-sources/annotations = 1701128633221
+/home/diego/NetBeansProjects/AMC2/target/apidocs/allpackages-index.html = 1701128637921
+/home/diego/NetBeansProjects/AMC2/target/apidocs/constant-values.html = 1701128637849
+/home/diego/NetBeansProjects/AMC2/target/apidocs/package-search-index.js = 1701128637913
+/home/diego/NetBeansProjects/AMC2/target/apidocs/serialized-form.html = 1701128637857
+/home/diego/NetBeansProjects/AMC2/target/apidocs/help-doc.html = 1701128637929
+/home/diego/NetBeansProjects/AMC2/target/apidocs/deprecated-list.html = 1701128637925
+/home/diego/NetBeansProjects/AMC2/target/apidocs/stylesheet.css = 1701128637933
+/home/diego/NetBeansProjects/AMC2/target/apidocs/index.html = 1701128637929
+/home/diego/NetBeansProjects/AMC2/target/apidocs/type-search-index.zip = 1701128637913
+/home/diego/NetBeansProjects/AMC2/target/apidocs/search.js = 1701128637933
+/home/diego/NetBeansProjects/AMC2/target/apidocs/package-search-index.zip = 1701128637913
+/home/diego/NetBeansProjects/AMC2/target/apidocs/type-search-index.js = 1701128637913
+/home/diego/NetBeansProjects/AMC2/target/apidocs/index-all.html = 1701128637917
+/home/diego/NetBeansProjects/AMC2/target/apidocs/member-search-index.js = 1701128637913
+/home/diego/NetBeansProjects/AMC2/target/apidocs/overview-tree.html = 1701128637897
+/home/diego/NetBeansProjects/AMC2/target/apidocs/allclasses-index.html = 1701128637921
+/home/diego/NetBeansProjects/AMC2/target/apidocs/allclasses.html = 1701128637925
+/home/diego/NetBeansProjects/AMC2/target/apidocs/script.js = 1701128637933
+/home/diego/NetBeansProjects/AMC2/target/apidocs/element-list = 1701128637833
+/home/diego/NetBeansProjects/AMC2/target/apidocs/member-search-index.zip = 1701128637913
+/home/diego/NetBeansProjects/AMC2/target/apidocs/jquery-ui.overrides.css = 1701128637941

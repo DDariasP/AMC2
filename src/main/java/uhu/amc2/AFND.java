@@ -99,6 +99,8 @@ public class AFND implements IProceso {
         Macroestado nuevo = new Macroestado();
         //añade el estado recibido al macroestado
         nuevo.addE(e);
+        //lista de visitados para no repetir
+        ArrayList<Estado> visitados = new ArrayList<>();
         //crea una lista de estados pendientes por comprobar
         ArrayList<Estado> pendientes = new ArrayList<>();
         //añade el estado recibido a la lista de pendientes
@@ -109,15 +111,19 @@ public class AFND implements IProceso {
             Estado tmp = pendientes.get(0);
             //lo elimina de pendientes
             pendientes.remove(0);
+            //lo añade a visitados
+            visitados.add(tmp);
             //busca en la lista de transiciones lambda
             for (int i = 0; i < listaL.size(); i++) {
                 Transicion t = listaL.get(i);
                 //aquellas con origen igual al estado tomado
-                if (t.origen == tmp) {
-                    //se añade el destino a la lista de pendientes
-                    pendientes.add(t.destino);
+                if (t.origen.equals(tmp)) {
                     //se añade el destino a la clausura lambda
                     nuevo.addE(t.destino);
+                    //se añade el destino a pendientes si no ha sido visitado 
+                    if (-1 == Estado.pertenece(t.destino.nombre, visitados)) {
+                        pendientes.add(t.destino);
+                    }
                 }
             }
         }
