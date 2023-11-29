@@ -218,13 +218,16 @@ public class AFND implements IProceso {
                 Transicion ttmp = a.listaT.get(j);
                 //cuando el estado transiciona con el carácter que se analiza
                 if (ttmp.origen == etmp && ttmp.simbolo.equals(s)) {
-                    //guarda la transición realizada
-                    a.ultimas.add(ttmp);
                     //hace la clausura lambda de su destino
                     Macroestado metmp = a.clausuraLambda(ttmp.destino);
                     //añade los estados de la clausura lambda al siguiente macroestado
                     for (int m = 0; m < metmp.size(); m++) {
                         siguiente.addE(metmp.getE(m));
+                    }
+                    //si no ha guardado ya la transición
+                    if (!a.ultimas.contains(ttmp)) {
+                        //guarda la transición realizada
+                        a.ultimas.add(ttmp);
                     }
                 }
             }
